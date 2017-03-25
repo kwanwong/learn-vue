@@ -20,17 +20,11 @@
             <div class="panel panel-default">
                 <div class="panel-heading">欢迎来到Vue js 2.0系列</div>
                 <div class="panel-body">
+                    <todo-form :items="todos"></todo-form>
+                    <todo-items :items="todos" title="Vue 1.0学习"></todo-items>
 
-                    <form action="">
-                        <div class="form-group">
-                            <input type="text" class="form-control" placeholder="请输入日程" v-model="stuff">
-                        </div>
-                        <div class="form-group">
-                            <button @click="addTodo" class="btn btn-success btn-block">添加日程</button>
-                        </div>
-                    </form>
-                    <todo-items :items="todos" :title="todoTitle"></todo-items>
-                    <todo-items :items="todos2" :title="todoTitle2"></todo-items>
+                    <todo-form :items="todos2"></todo-form>
+                    <todo-items :items="todos2" title="Vue 2.0学习"></todo-items>
                 </div>
             </div>
         </div>
@@ -38,15 +32,26 @@
 </div>
 <script type="text/x-template" id="todo-items-template">
     <div>
-        <h3>{{ title }}<small>{{ remaining }} / {{ total }}</small></h3>
+        <h3>{{ title }}<small v-show="total" class="pull-right">{{ remaining }} / {{ total }}</small></h3>
+        <pre v-show="!total">暂无数据</pre>
         <ul class="list-group">
-            <li v-for="todo in items" :class="{'completed': todo.completed}" class="list-group-item list-group-item-success">
+            <li v-for="(todo, index) in items" :class="{'completed': todo.completed}" class="list-group-item list-group-item-success">
                 <button @click="completeTodo(todo)" :class="['btn', 'btn-xs', todo.completed ? 'btn-success' : 'btn-primary']">{{ statusText(todo) }}</button>
                 {{ todo.title }}
-                <button @click="deleteTodo(todo)" class="btn btn-xs btn-warning pull-right">删除</button>
+                <button @click="deleteTodo(index)" class="btn btn-xs btn-warning pull-right">删除</button>
             </li>
         </ul>
     </div>
+</script>
+<script type="text/x-template" id="todo-form-template">
+    <form action="" @submit.prevent="addTodo(newTodo)">
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="请输入日程" v-model="newTodo.title">
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary btn-block">添加日程</button>
+        </div>
+    </form>
 </script>
 <script src="./js/vue-2.0.js"></script>
 <script>
@@ -76,27 +81,35 @@
         }
     });
 
+    Vue.component('todo-form', {
+        template: '#todo-form-template',
+        props: ['items'],
+        data: function(){
+            return {
+                newTodo: {id:null, title:'', completed:false}
+            }
+        },
+        methods: {
+            addTodo: function(item){
+                if(item.title){
+                    this.items.push(item);
+                    this.newTodo = {id: null, title: '', completed:false};
+                }
+            }
+        }
+    });
+
     var vue = new Vue({
         el: '#app',
         data: {
-            todoTitle: '我的日程',
-            todoTitle2: '我的日程2',
-            stuff: '',
             todos: [
-                {id:1, title:'学习Vue', completed:false},
-                {id:2, title:'看球赛', completed:true}
+                {id:1, title:'Vue 1.0 第一课', completed:false},
+                {id:2, title:'Vue 1.0 第二课', completed:true}
             ],
             todos2: [
-                {id:3, title:'学习Vue2', completed:false},
-                {id:4, title:'看球赛2', completed:true}
+                {id:3, title:'Vue 2.0 第一课', completed:false},
+                {id:4, title:'Vue 2.0 第二课', completed:true}
             ]
-        },
-        methods: {
-            addTodo: function(e){
-                e.preventDefault();
-                this.todos.push({id: null, title: this.stuff, completed: false});
-                this.stuff = '';
-            }
         }
     });
 </script>
