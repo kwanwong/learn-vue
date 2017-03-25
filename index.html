@@ -20,7 +20,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">欢迎来到Vue js 2.0系列</div>
                 <div class="panel-body">
-                    <h3>{{ message }} <small>{{ remainingTodoCount }} / {{ todoCount }}</small></h3>
+
                     <form action="">
                         <div class="form-group">
                             <input type="text" class="form-control" placeholder="请输入日程" v-model="stuff">
@@ -29,55 +29,76 @@
                             <button @click="addTodo" class="btn btn-success btn-block">添加日程</button>
                         </div>
                     </form>
-                    <ul class="list-group">
-                        <li v-for="(todo, index) in todos" :class="{'completed': todo.completed}" class="list-group-item list-group-item-success">
-                            <button @click="completeTodo(todo)" :class="['btn', 'btn-xs', todo.completed ? 'btn-success' : 'btn-primary']">{{ statusText(todo) }}</button>
-                            {{ todo.title }}
-                            <button @click="deleteTodo(index)" class="btn btn-xs btn-warning pull-right">删除</button>
-                        </li>
-                    </ul>
+                    <todo-items :items="todos" :title="todoTitle"></todo-items>
+                    <todo-items :items="todos2" :title="todoTitle2"></todo-items>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script type="text/x-template" id="todo-items-template">
+    <div>
+        <h3>{{ title }}<small>{{ remaining }} / {{ total }}</small></h3>
+        <ul class="list-group">
+            <li v-for="todo in items" :class="{'completed': todo.completed}" class="list-group-item list-group-item-success">
+                <button @click="completeTodo(todo)" :class="['btn', 'btn-xs', todo.completed ? 'btn-success' : 'btn-primary']">{{ statusText(todo) }}</button>
+                {{ todo.title }}
+                <button @click="deleteTodo(todo)" class="btn btn-xs btn-warning pull-right">删除</button>
+            </li>
+        </ul>
+    </div>
+</script>
 <script src="./js/vue-2.0.js"></script>
 <script>
-var vue = new Vue({
-    el: '#app',
-    data: {
-        message: '我的日程',
-        stuff: '',
-        todos: [
-            {id:1, title:'学习Vue', completed:false},
-            {id:2, title:'看球赛', completed:true}
-        ]
-    },
-    computed: {
-        remainingTodoCount: function(){
-            return this.todos.length - 1;
+    Vue.component('todo-items', {
+        template: '#todo-items-template',
+        props: ['items', 'title'],
+        computed: {
+            remaining: function(){
+                return this.items.filter(function(item){
+                    return !item.completed;
+                }).length;
+            },
+            total: function(){
+                return this.items.length;
+            }
         },
-        todoCount: function(){
-            return this.todos.length;
+        methods: {
+            deleteTodo: function(item){
+                this.items.splice(item, 1);
+            },
+            completeTodo: function(item){
+                item.completed = !item.completed;
+            },
+            statusText: function(item){
+                return item.completed ? '完成' : '待办';
+            }
         }
-    },
-    methods: {
-        addTodo: function(e){
-            e.preventDefault();
-            this.todos.push({id: null, title: this.stuff, completed: false});
-            this.stuff = '';
+    });
+
+    var vue = new Vue({
+        el: '#app',
+        data: {
+            todoTitle: '我的日程',
+            todoTitle2: '我的日程2',
+            stuff: '',
+            todos: [
+                {id:1, title:'学习Vue', completed:false},
+                {id:2, title:'看球赛', completed:true}
+            ],
+            todos2: [
+                {id:3, title:'学习Vue2', completed:false},
+                {id:4, title:'看球赛2', completed:true}
+            ]
         },
-        deleteTodo: function(index){
-            this.todos.splice(index, 1);
-        },
-        completeTodo: function(todo){
-            todo.completed = !todo.completed;
-        },
-        statusText: function(todo){
-            return todo.completed ? '完成' : '待办';
+        methods: {
+            addTodo: function(e){
+                e.preventDefault();
+                this.todos.push({id: null, title: this.stuff, completed: false});
+                this.stuff = '';
+            }
         }
-    }
-});
+    });
 </script>
 </body>
 </html>
