@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue 2.0</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+</head>
+<body>
+<nav class="navbar navbar-default navbar-static-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a href="" class="navbar-brand">Vue 2.0</a>
+        </div>
+    </div>
+</nav>
+<div class="container" id="app">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">欢迎来到Vue js 2.0系列</div>
+                <div class="panel-body">
+                    <h3>{{ message }}</h3>
+                    <form action="">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="请输入日程" v-model="stuff">
+                        </div>
+                        <div class="form-group">
+                            <button @click="addTodo" class="btn btn-success btn-block">添加日程</button>
+                        </div>
+                    </form>
+                    <ul class="list-group">
+                        <li v-for="(todo, index) in todos" class="list-group-item list-group-item-success">
+                            {{ todo.title }}
+                            <button @click="deleteTodo(index)" class="btn btn-xs btn-warning pull-right">删除</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./js/vue-2.0.js"></script>
+<script>
+var vue = new Vue({
+    el: '#app',
+    data: {
+        message: '周末时间安排',
+        stuff: '',
+        todos: [
+            {id:1, title:'学习Vue'},
+            {id:2, title:'看球赛'}
+        ]
+    },
+    methods: {
+        addTodo: function(e){
+            e.preventDefault();
+            this.todos.push({id: null, title: this.stuff});
+            this.stuff = '';
+        },
+        deleteTodo: function(index){
+            this.todos.splice(index, 1);
+        }
+    }
+});
+</script>
+</body>
+</html>
