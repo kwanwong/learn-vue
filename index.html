@@ -31,7 +31,7 @@
                     </form>
                     <ul class="list-group">
                         <li v-for="(todo, index) in todos" :class="{'completed': todo.completed}" class="list-group-item list-group-item-success">
-                            <button @click="completeTodo(todo)" class="btn btn-xs" :class="{'btn-success': todo.completed, 'btn-primary': !todo.completed}">{{ statusText(todo) }}</button>
+                            <button @click="completeTodo(todo)" :class="['btn', 'btn-xs', todo.completed ? 'btn-success' : 'btn-primary']">{{ statusText(todo) }}</button>
                             {{ todo.title }}
                             <button @click="deleteTodo(index)" class="btn btn-xs btn-warning pull-right">删除</button>
                         </li>
