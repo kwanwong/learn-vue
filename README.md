@@ -23,24 +23,22 @@ var app = new Vue({
 *输出:*
 > Hello Vue! 
 
-### v-bind:class
+### 样式绑定v-bind:class
 > 为元素绑定样式，可简写为:class
 
 *第一种写法:*
-
+当row.is_completed为true时，为当前div追加样式.completed
 ```html
-//当row.is_completed为true时，为当前div追加样式.completed
 <div class="row" v-bind:class="{'completed': row.is_completed}"></div>
 ```
 
 *第二种写法*
-
+可使用三元运算符
 ```html
-//可使用三元运算符
 <div v-bind:class="['row', row.is_completed ? 'completed' : 'undo']"></div>
 ```
 
-### computed
+### 属性计算computed
 > 对于复杂的逻辑，使用表达式计算以后输出结果
 
 *例子:*
