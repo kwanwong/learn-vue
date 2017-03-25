@@ -1,16 +1,8 @@
 .row{
     padding: 10px 0 0 0;
 }
-.green{
-    background-color: green;
-    color: #FFF;
-}
-.red{
-    background-color: red;
-    color: #FFF;
-}
 .completed{
-    text-decoration: line-through;
     color: #ff7246;
+    text-decoration: line-through;
 }
 

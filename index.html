@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Vue 2.0</title>
     <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
 <nav class="navbar navbar-default navbar-static-top">
@@ -19,7 +20,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">欢迎来到Vue js 2.0系列</div>
                 <div class="panel-body">
-                    <h3>{{ message }}</h3>
+                    <h3>{{ message }} <small>{{ remainingTodoCount }} / {{ todoCount }}</small></h3>
                     <form action="">
                         <div class="form-group">
                             <input type="text" class="form-control" placeholder="请输入日程" v-model="stuff">
@@ -29,7 +30,8 @@
                         </div>
                     </form>
                     <ul class="list-group">
-                        <li v-for="(todo, index) in todos" class="list-group-item list-group-item-success">
+                        <li v-for="(todo, index) in todos" :class="{'completed': todo.completed}" class="list-group-item list-group-item-success">
+                            <button @click="completeTodo(todo)" class="btn btn-xs" :class="{'btn-success': todo.completed, 'btn-primary': !todo.completed}">{{ statusText(todo) }}</button>
                             {{ todo.title }}
                             <button @click="deleteTodo(index)" class="btn btn-xs btn-warning pull-right">删除</button>
                         </li>
@@ -44,21 +46,35 @@
 var vue = new Vue({
     el: '#app',
     data: {
-        message: '周末时间安排',
+        message: '我的日程',
         stuff: '',
         todos: [
-            {id:1, title:'学习Vue'},
-            {id:2, title:'看球赛'}
+            {id:1, title:'学习Vue', completed:false},
+            {id:2, title:'看球赛', completed:true}
         ]
+    },
+    computed: {
+        remainingTodoCount: function(){
+            return this.todos.length - 1;
+        },
+        todoCount: function(){
+            return this.todos.length;
+        }
     },
     methods: {
         addTodo: function(e){
             e.preventDefault();
-            this.todos.push({id: null, title: this.stuff});
+            this.todos.push({id: null, title: this.stuff, completed: false});
             this.stuff = '';
         },
         deleteTodo: function(index){
             this.todos.splice(index, 1);
+        },
+        completeTodo: function(todo){
+            todo.completed = !todo.completed;
+        },
+        statusText: function(todo){
+            return todo.completed ? '完成' : '待办';
         }
     }
 });
